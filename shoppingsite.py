@@ -78,26 +78,23 @@ def show_shopping_cart():
     
     #Session {'cart': {'anci': 1, 'arkb': 2}
 
-    #anci.
     cart_list = []
     cart_total = 0
-
 
     for melon_id, count in session['cart'].items():
         melon = melons.get_by_id(melon_id)
         melon.quantity = count
         melon.total_melon_price = melon.price * melon.quantity
+        melon.total_melon_price_string = "${:.2f}".format(melon.total_melon_price)
 
         cart_list.append(melon)
         cart_total += melon.total_melon_price
 
-    print("\n \n \n \n")
-    print(cart_list, cart_total)
-    print("\n \n \n \n")
-
     return render_template("cart.html", 
                            cart_list=cart_list,
-                           cart_total=cart_total)
+                           cart_total="${:.2f}".format(cart_total)
+                           )
+
 
 @app.route("/add_to_cart/<melon_id>")
 def add_to_cart(melon_id):
