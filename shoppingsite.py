@@ -6,10 +6,11 @@ put melons in a shopping cart.
 Authors: Joel Burton, Christian Fernandez, Meggie Mahnken, Katie Byers.
 """
 
-from flask import Flask, render_template, redirect, flash, session
+from flask import Flask, render_template, redirect, flash, session, request
 import jinja2
 
 import melons
+import customers
 
 app = Flask(__name__)
 
@@ -153,7 +154,34 @@ def process_login():
     # - if they don't, flash a failure message and redirect back to "/login"
     # - do the same if a Customer with that email doesn't exist
 
-    return "Oops! This needs to be implemented"
+    # - ImmutableMultiDict{'email':'kfjdkls@gmail.com', 'password':'onetow'}
+
+    login_attempt = request.form
+
+    print('\n \n \n \n')
+    print(login_attempt)
+    print('\n \n \n \n')
+
+    if login_attempt['email'] in customers.customer_dictionary:
+        user = customers.get_by_email(login_attempt['email'])
+        if user.password == login_attempt['password']:
+            flash("Login Successful!")
+            return redirect("/melons")
+        else:
+            flash("Incorrect Password")
+            return redirect("/login")
+    else:
+        flash("User Not Found")
+        return redirect("/login")
+    # print('\n \n \n \n')
+    # print(user)
+    # print(user.password)
+    # print('\n \n \n \n')
+
+
+
+
+ #   return "Oops! This needs to be implemented"
 
 
 @app.route("/checkout")
